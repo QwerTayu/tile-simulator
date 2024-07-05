@@ -72,7 +72,6 @@ export default function Home() {
     i: number,
     j: number
   ) => {
-    console.log("rotate");
     const newTileMap = tileMap.map((row) => row.slice());
     newTileMap[i][j] = {
       ...newTileMap[i][j],
@@ -99,7 +98,6 @@ export default function Home() {
     j: number,
     isRightClick: boolean
   ) => {
-    console.log(defaultMode, isRightClick);
     e.preventDefault();
     if (isRightClick) {
       if (defaultMode) {
@@ -130,7 +128,6 @@ export default function Home() {
 
   const handleClickTemplate = (index: number) => () => {
     const newTileMap: Tile[][] = [...tileMap];
-    console.log(index, newTileMap);
     switch (index) {
       case 0:
         for (let i: number = 0; i < 50; i++) {
