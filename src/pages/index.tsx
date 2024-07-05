@@ -1,13 +1,20 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { useState } from "react";
-import { VT323 } from "next/font/google";
+import { Kaisei_Tokumin, VT323 } from "next/font/google";
 import { useRecoilState } from "recoil";
 import { modeState } from "@/atoms/state";
 import { Icon } from "@iconify/react"
 
 const textFont = VT323({
   weight: "400",
+  style: "normal",
+  display: "block",
+  subsets: ["latin"],
+});
+
+const jaFont = Kaisei_Tokumin({
+  weight: "700",
   style: "normal",
   display: "block",
   subsets: ["latin"],
@@ -52,6 +59,7 @@ export default function Home() {
   }
 
   const [tileMap, setTileMap] = useState<string[][]>(newTileMap);
+  const [isOpenFaq, setIsOpenFaq] = useState<boolean>(false);
   const [defaultMode, setDefaultMode] = useRecoilState<boolean>(modeState);
 
   const handleRotateClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
@@ -91,6 +99,10 @@ export default function Home() {
   const handleChangeMode = () => {
     setDefaultMode(!defaultMode);
   }
+
+  const handleToggleFaq = () => {
+    setIsOpenFaq(!isOpenFaq);
+  }
   
   return (
     <>
@@ -105,6 +117,7 @@ export default function Home() {
           <div className={styles.header}>
             <div className={`${textFont.className} ${styles.title}`}>
               Tile Simulator
+              <Icon onClick={handleToggleFaq} className={styles.openFaq} icon="mdi:question-mark-circle-outline" />
             </div>
             <div className={styles.setting}>
               <div className={`${styles.mode} ${defaultMode ? styles.color : styles.rotate}`} onClick={handleChangeMode}>
@@ -132,6 +145,18 @@ export default function Home() {
                 ))}
               </div>
             ))}
+          </div>
+          <div onClick={handleToggleFaq} className={`${styles.faqWrapper} ${isOpenFaq && styles.isOpen}`}>
+            <div className={`${jaFont.className} ${styles.faq}`}>
+              <h1 className={styles.faqTitle}>遊び方</h1>
+              <ol>
+                <li>タイルを左クリックすると回転できます</li>
+                <li>タイルを右クリックすると色が変わります</li>
+                <li>右上のトグルから左クリックと右クリックの機能を逆にすることができます</li>
+                <li>モバイル端末で遊ぶ時には↑を都度切り替えて操作しましょう</li>
+                <li>画面の任意の場所をクリックするとこの「遊び方」を非表示にできます</li>
+              </ol>
+            </div>
           </div>
         </div>
       </main>
