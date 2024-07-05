@@ -195,6 +195,7 @@ export default function Home() {
         <meta property="og:site_name" content="Tile Simulator" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="/appImage.png" />
+        <meta name="twitter:card" content="summary_large_image" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
