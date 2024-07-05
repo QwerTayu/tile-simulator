@@ -2,8 +2,10 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { useState } from "react";
 import { VT323 } from "next/font/google";
+import { useRecoilState } from "recoil";
+import { mobileState } from "@/atoms/state";
 
-const titleFont = VT323({
+const textFont = VT323({
   weight: "400",
   style: "normal",
   display: "block",
@@ -49,6 +51,7 @@ export default function Home() {
   }
 
   const [tileMap, setTileMap] = useState<string[][]>(newTileMap);
+  const [isMobile, setIsMobile] = useRecoilState<boolean>(mobileState);
   
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
     const newTileMap = tileMap.map((row) => row.slice());
@@ -62,6 +65,10 @@ export default function Home() {
     newTileMap[i][j] = `${(Number(newTileMap[i][j].charAt(0))+1)%4}${Number(newTileMap[i][j])%10}`
     setTileMap(newTileMap);
   }
+
+  const handleChangeMode = () => {
+    setIsMobile(!isMobile);
+  }
   
   return (
     <>
@@ -72,10 +79,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.content} style={{ backgroundColor: colors["brown"][1] }}>
+        <div className={styles.content}>
           <div className={styles.header}>
-            <div className={`${titleFont.className} ${styles.title}`}>
+            <div className={`${textFont.className} ${styles.title}`}>
               Tile Simulator
+            </div>
+            <div className={styles.mode}>
+              <div>
+                <input id="isMobileCheck" checked={isMobile} type="checkbox" onChange={handleChangeMode} className={styles.checkbox} />
+                <label className={`${textFont.className} ${styles.check}`} htmlFor="isMobileCheck"><div></div></label>
+              </div>
             </div>
           </div>
           <div className={styles.tileMap}>
