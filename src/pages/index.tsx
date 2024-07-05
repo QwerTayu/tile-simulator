@@ -35,7 +35,7 @@ type Tile = {
 };
 
 export default function Home() {
-  const newTileMap: Tile[][] = [];
+  const createTileMap: Tile[][] = [];
   const themes: Themes[] = ["yellow", "brown", "gray", "green"];
   const colors: Colors = {
     yellow: ["#F1CB84", "#7D7D7D"],
@@ -45,25 +45,26 @@ export default function Home() {
   };
 
   for (let i: number = 0; i < 50; i++) {
-    newTileMap[i * 2] = [];
-    newTileMap[i * 2 + 1] = [];
+    createTileMap[i * 2] = [];
+    createTileMap[i * 2 + 1] = [];
     for (let j: number = 0; j < 4; j++) {
       if ((i % 2) + (j % 2) === 1) {
-        newTileMap[i * 2][j * 2] = { rotate: true, theme: "yellow" };
-        newTileMap[i * 2][j * 2 + 1] = { rotate: true, theme: "yellow" };
-        newTileMap[i * 2 + 1][j * 2] = { rotate: true, theme: "yellow" };
-        newTileMap[i * 2 + 1][j * 2 + 1] = { rotate: true, theme: "yellow" };
+        createTileMap[i * 2][j * 2] = { rotate: true, theme: "yellow" };
+        createTileMap[i * 2][j * 2 + 1] = { rotate: true, theme: "yellow" };
+        createTileMap[i * 2 + 1][j * 2] = { rotate: true, theme: "yellow" };
+        createTileMap[i * 2 + 1][j * 2 + 1] = { rotate: true, theme: "yellow" };
       } else {
-        newTileMap[i * 2][j * 2] = { rotate: false, theme: "yellow" };
-        newTileMap[i * 2][j * 2 + 1] = { rotate: false, theme: "yellow" };
-        newTileMap[i * 2 + 1][j * 2] = { rotate: false, theme: "yellow" };
-        newTileMap[i * 2 + 1][j * 2 + 1] = { rotate: false, theme: "yellow" };
+        createTileMap[i * 2][j * 2] = { rotate: false, theme: "yellow" };
+        createTileMap[i * 2][j * 2 + 1] = { rotate: false, theme: "yellow" };
+        createTileMap[i * 2 + 1][j * 2] = { rotate: false, theme: "yellow" };
+        createTileMap[i * 2 + 1][j * 2 + 1] = { rotate: false, theme: "yellow" };
       }
     }
   }
 
-  const [tileMap, setTileMap] = useState<Tile[][]>(newTileMap);
+  const [tileMap, setTileMap] = useState<Tile[][]>(createTileMap);
   const [isOpenFaq, setIsOpenFaq] = useState<boolean>(false);
+  const [isOpenCommand, setIsOpenCommand] = useState<boolean>(false);
   const [defaultMode, setDefaultMode] = useRecoilState<boolean>(modeState);
 
   const handleRotateClick = (
@@ -85,7 +86,6 @@ export default function Home() {
     i: number,
     j: number
   ) => {
-    console.log("color");
     const newTileMap = tileMap.map((row) => row.slice());
     const nextThemeIndex =
       (themes.indexOf(newTileMap[i][j].theme) + 1) % themes.length;
@@ -102,14 +102,12 @@ export default function Home() {
     console.log(defaultMode, isRightClick);
     e.preventDefault();
     if (isRightClick) {
-      console.log("right click");
       if (defaultMode) {
         handleRotateClick(e, i, j);
       } else {
         handleColorClick(e, i, j);
       }
     } else {
-      console.log("left click");
       if (!defaultMode) {
         handleRotateClick(e, i, j);
       } else {
@@ -124,6 +122,68 @@ export default function Home() {
 
   const handleToggleFaq = () => {
     setIsOpenFaq(!isOpenFaq);
+  };
+
+  const handleToggleCommand = () => {
+    setIsOpenCommand(!isOpenCommand);
+  };
+
+  const handleClickTemplate = (index: number) => () => {
+    const newTileMap: Tile[][] = [...tileMap];
+    console.log(index, newTileMap);
+    switch (index) {
+      case 0:
+        for (let i: number = 0; i < 50; i++) {
+          for (let j: number = 0; j < 4; j++) {
+            if ((i % 2) + (j % 2) === 1) {
+              newTileMap[i * 2][j * 2].rotate = true;
+              newTileMap[i * 2][j * 2 + 1].rotate = true;
+              newTileMap[i * 2 + 1][j * 2].rotate = true;
+              newTileMap[i * 2 + 1][j * 2 + 1].rotate = true;
+            } else {
+              newTileMap[i * 2][j * 2].rotate = false;
+              newTileMap[i * 2][j * 2 + 1].rotate = false;
+              newTileMap[i * 2 + 1][j * 2].rotate = false;
+              newTileMap[i * 2 + 1][j * 2 + 1].rotate = false;
+            }
+          }
+        }
+        break;
+      case 1:
+        for (let i: number = 0; i < 100; i++) {
+          for (let j: number = 0; j < 8; j++) {
+            newTileMap[i][j].rotate = true;
+          }
+        }
+        break;
+      case 2:
+        for (let i: number = 0; i < 100; i++) {
+          for (let j: number = 0; j < 8; j++) {
+            newTileMap[i][j].theme = "yellow";
+          }
+        }
+        break;
+      case 3:
+        for (let i: number = 0; i < 50; i++) {
+          for (let j: number = 0; j < 4; j++) {
+            if ((i % 2) + (j % 2) === 1) {
+              newTileMap[i * 2][j * 2].theme = "green";
+              newTileMap[i * 2][j * 2 + 1].theme = "green";
+              newTileMap[i * 2 + 1][j * 2].theme = "green";
+              newTileMap[i * 2 + 1][j * 2 + 1].theme = "green";
+            } else {
+              newTileMap[i * 2][j * 2].theme = "yellow";
+              newTileMap[i * 2][j * 2 + 1].theme = "yellow";
+              newTileMap[i * 2 + 1][j * 2].theme = "yellow";
+              newTileMap[i * 2 + 1][j * 2 + 1].theme = "yellow";
+            }
+          }
+        }
+        break;
+      default:
+        break;
+    }
+    setTileMap(newTileMap);
   };
 
   return (
@@ -214,22 +274,52 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className={`${enFont.className} ${styles.template}`}>
-            TileTemplate
+          <div className={`${jaFont.className} ${styles.command} ${isOpenCommand && styles.isOpenCommand}`}>
+            <div className={`${enFont.className}`}>
+              <h3>Template</h3>
+              <div className={styles.commands}>
+                <p onClick={handleClickTemplate(0)}>&lt;R:0&gt;</p>
+                <p onClick={handleClickTemplate(1)}>&lt;R:1&gt;</p>
+                <p onClick={handleClickTemplate(2)}>&lt;C:0&gt;</p>
+                <p onClick={handleClickTemplate(3)}>&lt;C:1&gt;</p>
+              </div>
+            </div>
+            {/* <div className={`${enFont.className}`}>
+              <h3>ChangeAll</h3>
+              <div className={styles.commands}>
+                <p>&lt;R&gt;</p>
+                <p>&lt;C:Y&rarr;B&gt;</p>
+              </div>
+            </div> */}
+          </div>
+          <div
+            className={`${enFont.className} ${styles.openCommand}`}
+            onClick={handleToggleCommand}
+          >
+            <h2>Command <span>{isOpenCommand ? <>&or;</> : <>&and;</>}</span> </h2>
           </div>
           <div
             onClick={handleToggleFaq}
-            className={`${styles.faqWrapper} ${isOpenFaq && styles.isOpen}`}
+            className={`${styles.faqWrapper} ${isOpenFaq && styles.isOpenFaq}`}
           >
             <div className={`${jaFont.className} ${styles.faq}`}>
               <h1 className={styles.faqTitle}>遊び方</h1>
               <ol>
-                <li>タイルを左クリックすると回転できます</li>
-                <li>タイルを右クリックすると色が変わります</li>
+                <li>
+                  タイルを左クリックすると回転できます
+                  </li>
+                <li>
+                  タイルを右クリックすると色が変わります
+                  </li>
                 <li>
                   右上のトグルから左クリックと右クリックの機能を逆にすることができます
                 </li>
-                <li>モバイル端末で遊ぶ時には↑を都度切り替えて操作しましょう</li>
+                <li>
+                  モバイル端末で遊ぶ時には&uarr;を都度切り替えて操作しましょう
+                </li>
+                <li>
+                  画面下部の<span className={enFont.className}>Command</span>から<span className={enFont.className}>Command</span>を実行できます
+                </li>
                 <li>
                   画面の任意の場所をクリックするとこの「遊び方」を非表示にできます
                 </li>
