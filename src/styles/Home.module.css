@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
   height: 100vh;
   width: 100vw;
   max-width: 760px;
@@ -37,7 +37,7 @@
   margin: 1rem;
   background-color: var(--color-yellow);
   border-radius: 5px;
-  padding: 10px 30px;
+  padding: 0.5rem 1.5rem;
 }
 
 .setting {
@@ -170,11 +170,11 @@
   overflow-y: auto;
 }
 
-.faqWrapper.isOpen {
+.faqWrapper.isOpenFaq {
   display: flex;
 }
 
-.faqWrapper.isOpen > .faq {
+.faqWrapper.isOpenFaq > .faq {
   display: block;
 }
 
@@ -196,4 +196,65 @@
 
 .faq > ol > li {
   padding-bottom: 0.5rem;
+}
+
+.openCommand {
+  display: flex;
+  padding: 0.5rem;
+  color: var(--color-white);
+}
+
+.openCommand > h2 {
+  font-size: 1.5rem;
+}
+
+.openCommand span {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.command {
+  width: 100%;
+  height: 0px;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  overflow-y: hidden;
+}
+
+.command.isOpenCommand {
+  height: 5rem; /*5rem追加する*/
+  transition: all 0.3s;
+  overflow-y: hidden;
+  padding-bottom: 3.5rem; /*5rem追加する*/
+}
+
+.command > * {
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  color: var(--color-white);
+  font-size: 1rem;
+}
+
+.command > * > h3 {
+  font-size: 1.2rem;
+}
+
+.command > * > .commands {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  flex-grow: 1;
+  gap: 0.5rem;
+  padding-right: 1rem;
+}
+
+.command > * > .commands > p {
+  font-size: 1.2rem;
+}
+
+.command > * > .commands > p:hover {
+  color: var(--color-yellow);
 }
