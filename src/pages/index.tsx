@@ -1,9 +1,12 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { VT323 } from "next/font/google";
+import { useRecoilState } from "recoil";
+import { modeState } from "@/atoms/state";
+import { Icon } from "@iconify/react"
 
-const titleFont = VT323({
+const textFont = VT323({
   weight: "400",
   style: "normal",
   display: "block",
@@ -49,18 +52,44 @@ export default function Home() {
   }
 
   const [tileMap, setTileMap] = useState<string[][]>(newTileMap);
-  
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
+  const [defaultMode, setDefaultMode] = useRecoilState<boolean>(modeState);
+
+  const handleRotateClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
+    console.log("rotate")
     const newTileMap = tileMap.map((row) => row.slice());
     newTileMap[i][j] = `${Number(newTileMap[i][j].charAt(0))}${(Number(newTileMap[i][j])%10+1)%2}`;
     setTileMap(newTileMap);
   }
 
-  const handleRightClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
-    e.preventDefault();
+  const handleColorClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
+    console.log("color")
     const newTileMap = tileMap.map((row) => row.slice());
     newTileMap[i][j] = `${(Number(newTileMap[i][j].charAt(0))+1)%4}${Number(newTileMap[i][j])%10}`
     setTileMap(newTileMap);
+  }
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number, isRightClick: boolean) => {
+    console.log(defaultMode, isRightClick)
+    e.preventDefault();
+    if (isRightClick) {
+      console.log("right click")
+      if (defaultMode) {
+        handleRotateClick(e, i, j);
+      } else {
+        handleColorClick(e, i, j);
+      }
+    } else {
+      console.log("left click")
+      if (!defaultMode) {
+        handleRotateClick(e, i, j);
+      } else {
+        handleColorClick(e, i, j);
+      }
+    }
+  }
+
+  const handleChangeMode = () => {
+    setDefaultMode(!defaultMode);
   }
   
   return (
@@ -72,17 +101,26 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.content} style={{ backgroundColor: colors["brown"][1] }}>
+        <div className={styles.content}>
           <div className={styles.header}>
-            <div className={`${titleFont.className} ${styles.title}`}>
+            <div className={`${textFont.className} ${styles.title}`}>
               Tile Simulator
+            </div>
+            <div className={styles.setting}>
+              <div className={`${styles.mode} ${defaultMode ? styles.color : styles.rotate}`} onClick={handleChangeMode}>
+                <div className={styles.indicator}></div>
+                <div className={styles.modeIcons}>
+                  <Icon icon="mdi:format-rotate-90" />
+                  <Icon icon="mdi:color" />
+                </div>
+              </div>
             </div>
           </div>
           <div className={styles.tileMap}>
             {tileMap.map((row, i) => (
               <div className={styles.tileRow} key={i}>
                 {row.map((value, j) => (
-                  <div onClick={(e) => handleClick(e, i, j)} onContextMenu={(e) => handleRightClick(e, i, j)} className={`${styles.tile} ${Number(value.charAt(1))%2 === 1 ? styles.tileRotate : ""}`} key={`${i}-${j}`}>
+                  <div onClick={(e) => handleClick(e, i, j, false)} onContextMenu={(e) => handleClick(e, i, j, true)} className={`${styles.tile} ${Number(value.charAt(1))%2 === 1 ? styles.tileRotate : ""}`} key={`${i}-${j}`}>
                     <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect width="100" height="100" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][0]}/>
                       <path fillRule="evenodd" clipRule="evenodd" d="M100 47.5V100H47.5C47.7694 71.1255 71.1255 47.7694 100 47.5Z" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][1]}/>
