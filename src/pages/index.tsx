@@ -36,7 +36,7 @@ type Tile = {
 
 export default function Home() {
   const newTileMap: Tile[][] = [];
-  const themes: Theme[] = ["yellow", "brown", "gray", "green"];
+  const themes: Themes[] = ["yellow", "brown", "gray", "green"];
   const colors: Colors = {
     yellow: ["#F1CB84", "#7D7D7D"],
     brown: ["#933F3F", "#414141"],
