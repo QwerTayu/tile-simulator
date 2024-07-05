@@ -126,10 +126,10 @@ export default function Home() {
     setIsOpenCommand(!isOpenCommand);
   };
 
-  const handleClickTemplate = (index: number) => () => {
+  const handleClickTemplate = (index: string) => () => {
     const newTileMap: Tile[][] = [...tileMap];
     switch (index) {
-      case 0:
+      case "R0":
         for (let i: number = 0; i < 50; i++) {
           for (let j: number = 0; j < 4; j++) {
             if ((i % 2) + (j % 2) === 1) {
@@ -146,21 +146,32 @@ export default function Home() {
           }
         }
         break;
-      case 1:
+      case "R1":
         for (let i: number = 0; i < 100; i++) {
           for (let j: number = 0; j < 8; j++) {
             newTileMap[i][j].rotate = true;
           }
         }
         break;
-      case 2:
+      case "R2":
+        for (let i: number = 0; i < 100; i++) {
+          for (let j: number = 0; j < 8; j++) {
+            if (i%2+j%2===1){
+              newTileMap[i][j].rotate = true;
+            } else {
+              newTileMap[i][j].rotate = false;
+            }
+          }
+        }
+        break;
+      case "C0":
         for (let i: number = 0; i < 100; i++) {
           for (let j: number = 0; j < 8; j++) {
             newTileMap[i][j].theme = "yellow";
           }
         }
         break;
-      case 3:
+      case "C1":
         for (let i: number = 0; i < 50; i++) {
           for (let j: number = 0; j < 4; j++) {
             if ((i % 2) + (j % 2) === 1) {
@@ -282,10 +293,11 @@ export default function Home() {
             <div className={`${enFont.className}`}>
               <h3>Template</h3>
               <div className={styles.commands}>
-                <p onClick={handleClickTemplate(0)}>&lt;R:0&gt;</p>
-                <p onClick={handleClickTemplate(1)}>&lt;R:1&gt;</p>
-                <p onClick={handleClickTemplate(2)}>&lt;C:0&gt;</p>
-                <p onClick={handleClickTemplate(3)}>&lt;C:1&gt;</p>
+                <p onClick={handleClickTemplate("R0")}>&lt;R:0&gt;</p>
+                <p onClick={handleClickTemplate("R1")}>&lt;R:1&gt;</p>
+                <p onClick={handleClickTemplate("R2")}>&lt;R:2&gt;</p>
+                <p onClick={handleClickTemplate("C0")}>&lt;C:0&gt;</p>
+                <p onClick={handleClickTemplate("C1")}>&lt;C:1&gt;</p>
               </div>
             </div>
             {/* <div className={`${enFont.className}`}>
