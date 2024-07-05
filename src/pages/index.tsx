@@ -27,52 +27,57 @@ type Colors = {
   gray: string[];
 }
 
-type themes = ["yellow", "brown", "gray", "green"];
+type Themes = "yellow" | "brown" | "gray" | "green";
+
+type Tile = {
+  rotate: boolean;
+  theme: Themes;
+}
 
 export default function Home() {
-  const newTileMap: string[][] = [];
+  const newTileMap: Tile[][] = [];
+  const themes: Theme[] = ["yellow", "brown", "gray", "green"];
   const colors: Colors = {
     yellow: ["#F1CB84", "#7D7D7D"],
     brown: ["#933F3F", "#414141"],
     gray: ["#D2D2D2", "#848484"],
     green: ["#759870", "#555555"],
   };
-
-  const themes: themes = ["yellow", "brown", "gray", "green"];
   
   for (let i: number = 0; i < 50; i++) {
     newTileMap[i*2] = [];
     newTileMap[i*2+1] = [];
     for (let j: number = 0; j < 4; j++) {
       if (i % 2 + j % 2 === 1) {
-        newTileMap[i*2][j*2] = "01";
-        newTileMap[i*2][j*2+1] = "01";
-        newTileMap[i*2+1][j*2] = "01";
-        newTileMap[i*2+1][j*2+1] = "01";
+        newTileMap[i*2][j*2] = {rotate: true, theme: "yellow"};
+        newTileMap[i*2][j*2+1] = {rotate: true, theme: "yellow"};
+        newTileMap[i*2+1][j*2] = {rotate: true, theme: "yellow"};
+        newTileMap[i*2+1][j*2+1] = {rotate: true, theme: "yellow"};
       } else {
-        newTileMap[i*2][j*2] = "00";
-        newTileMap[i*2][j*2+1] = "00";
-        newTileMap[i*2+1][j*2] = "00";
-        newTileMap[i*2+1][j*2+1] = "00";
+        newTileMap[i*2][j*2] = {rotate: false, theme: "yellow"};
+        newTileMap[i*2][j*2+1] = {rotate: false, theme: "yellow"};
+        newTileMap[i*2+1][j*2] = {rotate: false, theme: "yellow"};
+        newTileMap[i*2+1][j*2+1] = {rotate: false, theme: "yellow"};
       }
     }
   }
 
-  const [tileMap, setTileMap] = useState<string[][]>(newTileMap);
+  const [tileMap, setTileMap] = useState<Tile[][]>(newTileMap);
   const [isOpenFaq, setIsOpenFaq] = useState<boolean>(false);
   const [defaultMode, setDefaultMode] = useRecoilState<boolean>(modeState);
 
   const handleRotateClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
     console.log("rotate")
     const newTileMap = tileMap.map((row) => row.slice());
-    newTileMap[i][j] = `${Number(newTileMap[i][j].charAt(0))}${(Number(newTileMap[i][j])%10+1)%2}`;
+    newTileMap[i][j] = { ...newTileMap[i][j], rotate: !newTileMap[i][j].rotate };;
     setTileMap(newTileMap);
   }
 
   const handleColorClick = (e: React.MouseEvent<HTMLDivElement>, i: number, j: number) => {
     console.log("color")
     const newTileMap = tileMap.map((row) => row.slice());
-    newTileMap[i][j] = `${(Number(newTileMap[i][j].charAt(0))+1)%4}${Number(newTileMap[i][j])%10}`
+    const nextThemeIndex = (themes.indexOf(newTileMap[i][j].theme) + 1) % themes.length;
+    newTileMap[i][j] = { ...newTileMap[i][j], theme: themes[nextThemeIndex] };
     setTileMap(newTileMap);
   }
 
@@ -132,14 +137,14 @@ export default function Home() {
           <div className={styles.tileMap}>
             {tileMap.map((row, i) => (
               <div className={styles.tileRow} key={i}>
-                {row.map((value, j) => (
-                  <div onClick={(e) => handleClick(e, i, j, false)} onContextMenu={(e) => handleClick(e, i, j, true)} className={`${styles.tile} ${Number(value.charAt(1))%2 === 1 ? styles.tileRotate : ""}`} key={`${i}-${j}`}>
+                {row.map((tile, j) => (
+                  <div onClick={(e) => handleClick(e, i, j, false)} onContextMenu={(e) => handleClick(e, i, j, true)} className={`${styles.tile} ${tile.rotate ? styles.tileRotate : ""}`} key={`${i}-${j}`}>
                     <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="100" height="100" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][0]}/>
-                      <path fillRule="evenodd" clipRule="evenodd" d="M100 47.5V100H47.5C47.7694 71.1255 71.1255 47.7694 100 47.5Z" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][1]}/>
-                      <path fillRule="evenodd" clipRule="evenodd" d="M100 52.5V99.9974H52.5C52.7693 73.8849 73.8872 52.7679 100 52.5Z" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][0]}/>
-                      <path fillRule="evenodd" clipRule="evenodd" d="M3.8147e-06 52.5L3.8147e-06 3.48247e-05L52.5 3.48247e-05C52.2306 28.8745 28.8745 52.2306 3.8147e-06 52.5Z" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][1]}/>
-                      <path fillRule="evenodd" clipRule="evenodd" d="M0 47.4974L0 6.69872e-06L47.5 6.69872e-06C47.2307 26.1125 26.1128 47.2295 0 47.4974Z" fill={colors[themes[Number(tileMap[i][j].charAt(0))%4]][0]}/>
+                      <rect width="100" height="100" fill={colors[tile.theme][0]}/>
+                      <path fillRule="evenodd" clipRule="evenodd" d="M100 47.5V100H47.5C47.7694 71.1255 71.1255 47.7694 100 47.5Z" fill={colors[tile.theme][1]}/>
+                      <path fillRule="evenodd" clipRule="evenodd" d="M100 52.5V99.9974H52.5C52.7693 73.8849 73.8872 52.7679 100 52.5Z" fill={colors[tile.theme][0]}/>
+                      <path fillRule="evenodd" clipRule="evenodd" d="M3.8147e-06 52.5L3.8147e-06 3.48247e-05L52.5 3.48247e-05C52.2306 28.8745 28.8745 52.2306 3.8147e-06 52.5Z" fill={colors[tile.theme][1]}/>
+                      <path fillRule="evenodd" clipRule="evenodd" d="M0 47.4974L0 6.69872e-06L47.5 6.69872e-06C47.2307 26.1125 26.1128 47.2295 0 47.4974Z" fill={colors[tile.theme][0]}/>
                     </svg>
                   </div>
                 ))}
