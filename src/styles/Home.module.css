@@ -16,6 +16,7 @@
   width: 100vw;
   max-width: 760px;
   background-color: var(--color-black);
+  position: relative;
 }
 
 .header {
@@ -29,14 +30,13 @@
   width: 80%;
   min-width: 15rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   font-size: 2rem;
   color: var(--color-black);
   margin: 1rem;
   background-color: var(--color-yellow);
   border-radius: 5px;
-  cursor: pointer;
   padding: 10px 30px;
 }
 
@@ -141,4 +141,59 @@
 
 .tileRotate > * {
   transform: rotate(90deg);
+}
+
+.openFaq {
+  cursor: pointer;
+}
+
+.faqWrapper {
+  display: none;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.faq {
+  display: none;
+  width: 80%;
+  max-width: 30rem;
+  height: 80%;
+  max-height: 30rem;
+  padding: 1rem;
+  background-color: var(--color-white);
+  border-radius: 0.5rem;
+  z-index: 2;
+  overflow-y: auto;
+}
+
+.faqWrapper.isOpen {
+  display: flex;
+}
+
+.faqWrapper.isOpen > .faq {
+  display: block;
+}
+
+.faqTitle {
+  font-size: 1.5rem;
+  color: var(--color-black);
+}
+
+.faqText {
+  font-size: 1rem;
+  color: var(--color-black);
+}
+
+.faq > ol {
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 0.5rem;
+}
+
+.faq > ol > li {
+  padding-bottom: 0.5rem;
 }
