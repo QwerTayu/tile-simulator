@@ -1,6 +1,6 @@
 import { atom } from 'recoil'
 
-export const mobileState = atom({
-  key: 'mobileState',
+export const modeState = atom({
+  key: 'modeState',
   default: false,
 })
